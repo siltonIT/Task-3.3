@@ -20,52 +20,41 @@ int find_pow_two(int number)
 }
 
 //Функция находит простое число меньшее нашего с помощью решета Эратосфена
-int find_prime_num_eratosth_sieve(int number)
+bool is_prime_number(int number, int prime_number)
 {
 	const int SIZE = 10000;
-	int prime_number[SIZE];
+	int prime_numbers[SIZE];
 
-	for (int i = 1; i < number; ++i)
+	for (int i = 0; i < number; ++i)
 	{
-		prime_number[i] = i;
+		prime_numbers[i] = i + 1;
 	}
 
-	for (int i = 0; i < SIZE; ++i)
+	for (int i = 2; i < number; ++i)
 	{
-		for (int n = 2; n < number; ++n)
+		for (int n = i*i - 1; n < number; ++n)
 		{
-			if (prime_number[i] == n)
+			if (prime_numbers[n] % i == 0)
 			{
-				continue;
-			}
-
-			if (prime_number[i] % n == 0)
-			{
-				prime_number[i] = 0;
+				prime_numbers[n] = 0;
 			}
 		}
 	}
 
-	for (int i = 1; true; ++i)
+	for (int i = 0; i < number; ++i)
 	{
-		if (prime_number[SIZE - i] != 0)
+		if (prime_numbers[i] == 0)
 		{
-			return prime_number[SIZE - i];
+			continue;
+		}
+
+		if (prime_number == prime_numbers[i])
+		{
+			return true;
 		}
 	}
-}
 
-//Функция находит число с наибольшим количеством нулей в двоичной записи
-int find_prime_number(int pow_two, int number, int prime_number)
-{
-	if (prime_number - pow_two <= number - pow_two)
-	{
-		return prime_number;
-	}
-	else
-	{
-		return number;
-	}
+	return false;
 }
 
 int main()
@@ -73,9 +62,18 @@ int main()
 	cout << "Write number:" << endl;
 	int number; cin >> number;
 
-	int simpleNumber = find_prime_num_eratosth_sieve(number);
-	int powTwo = find_pow_two(number);
+	int pow_two = find_pow_two(number);
+	int prime_number;
+
+	for (int i = pow_two + 1; i <= number; ++i)
+	{
+		if (is_prime_number(number, i))
+		{
+			prime_number = i;
+			break;
+		}
+	}
 
 	cout << "Number whith max 0:" << endl;
-	cout << find_prime_number(powTwo, number, simpleNumber) << endl;
+	cout << prime_number << endl;
 }
